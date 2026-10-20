@@ -1,0 +1,20 @@
+{
+  "name": "iptv",
+  "version": "1.0.0",
+  "private": true,
+  "description": "IPTV Player for Android TV: Xtream Codes, M3U and XMLTV, built into a small APK by build.sh",
+  "scripts": {
+    "build": "./build.sh",
+    "web": "node web/build.mjs",
+    "mock": "PORT=8091 SCALE=large node tools/mock/server.mjs",
+    "dev": "PORT=8090 DATA=/tmp/iptv-data node tools/dev/server.mjs"
+  },
+  "dependencies": {
+    "@fontsource/atkinson-hyperlegible-next": "^5.3.0",
+    "@fontsource/teko": "^5.3.0",
+    "@sparticuz/chromium": "^153.0.0",
+    "esbuild": "^0.28.2",
+    "puppeteer-core": "^25.15.0",
+    "qrcode-generator": "^2.0.4"
+  }
+}

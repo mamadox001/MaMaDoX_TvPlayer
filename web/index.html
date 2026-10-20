@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>IPTV Player</title>
+<link rel="stylesheet" href="app.css?v=__BUILD__">
+</head>
+<body>
+<div id="app"></div>
+<script>
+// Runs on any web engine: explains the problem instead of a frozen screen on very old TVs.
+(function () {
+  var ok = typeof fetch === 'function' && typeof Promise === 'function' && !!(window.CSS && CSS.supports && CSS.supports('--a', '0'));
+  try { new Function('class A { constructor() { this.f = () => 1; } } let { a } = { a: `1` }; return a;'); } catch (e) { ok = false; }
+  if (ok) return;
+  window.__old = true;
+  window.__key = function (name, type) {
+    if (name === 'back' && type === 'up' && window.AndroidNative) window.AndroidNative.exitApp();
+  };
+  document.addEventListener('DOMContentLoaded', function () {
+    document.body.innerHTML = '<div style="position:fixed;left:0;top:0;right:0;bottom:0;background:#0E1B2C;color:#F4F0E6;font:28px/1.5 sans-serif;padding:12% 14%">' +
+      '<div style="font-size:44px;font-weight:bold;margin-bottom:24px">This TV needs an update</div>' +
+      'The web engine on this device is too old to run IPTV Player.<br>Open the Play Store, update <b>Android System WebView</b> (or Chrome), then open IPTV Player again.' +
+      '<div style="color:#97A6BF;margin-top:36px;font-size:24px">Press Back to close.</div></div>';
+    if (window.AndroidNative) window.AndroidNative.ready();
+  });
+})();
+</script>
+<script src="app.js?v=__BUILD__"></script>
+</body>
+</html>
