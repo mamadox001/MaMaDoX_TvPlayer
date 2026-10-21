@@ -16,5 +16,9 @@
     "esbuild": "^0.28.2",
     "puppeteer-core": "^25.15.0",
     "qrcode-generator": "^2.0.4"
+  },
+  "devDependencies": {
+    "hls.js": "^1.7.3",
+    "mpegts.js": "^1.8.2"
   }
 }

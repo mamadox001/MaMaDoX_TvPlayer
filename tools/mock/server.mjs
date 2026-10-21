@@ -275,8 +275,12 @@ http.createServer((req, res) => {
       if (!p.startsWith('/img/') && (/^\/(live|movie|series|timeshift)\//.test(p) || /^\/[^/]+\/[^/]+\/\d+(\.\w+)?$/.test(p))) {
         if (!p.includes(`/${USER}/${PASS}/`)) return send(res, 403, 'forbidden', 'text/plain');
         if (p.includes('/live/') && /\/1013\./.test(p)) return send(res, 404, 'offline', 'text/plain'); // a dead channel
+        // REAL=1: real HLS and MPEG-TS (for the desktop app's hls.js / mpegts.js players)
+        if (process.env.REAL && /\.m3u8$/.test(p)) return send(res, 200, fs.readFileSync(path.join(DIR, 'assets/hls/index.m3u8'), 'utf8').replace(/^seg/gm, '/hlsseg/seg'), 'application/vnd.apple.mpegurl');
+        if (process.env.REAL && /\.ts$/.test(p)) return serveFile(req, res, path.join(DIR, 'assets/test.ts'), 'video/mp2t');
         return serveFile(req, res, path.join(DIR, 'assets/test.webm'), 'video/webm');
       }
+      if (p.startsWith('/hlsseg/')) return serveFile(req, res, path.join(DIR, 'assets/hls', path.basename(p)), 'video/mp2t');
       if (p.startsWith('/img/')) {
         const f = path.join(DIR, 'assets', p.slice(5));
         if (!f.startsWith(path.join(DIR, 'assets'))) return send(res, 403, 'no', 'text/plain');

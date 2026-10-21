@@ -5,8 +5,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
-const mobile = process.argv.includes('--mobile');
-const OUT = mobile ? path.join(ROOT, 'build/mobile-assets/www') : path.join(ROOT, 'android/assets/www');
+const desktop = process.argv.includes('--desktop');
+const mobile = desktop || process.argv.includes('--mobile');
+const OUT = desktop ? path.join(ROOT, 'desktop/www') : mobile ? path.join(ROOT, 'build/mobile-assets/www') : path.join(ROOT, 'android/assets/www');
 const dev = process.argv.includes('--dev');
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(path.join(OUT, 'fonts'), { recursive: true });
@@ -35,10 +36,20 @@ const fonts = {
   'teko-600.woff2': 'teko/files/teko-latin-600-normal.woff2',
 };
 for (const [to, from] of Object.entries(fonts)) fs.copyFileSync(path.join(F, from), path.join(OUT, 'fonts', to));
-fs.writeFileSync(path.join(OUT, 'index.html'), fs.readFileSync(path.join(ROOT, mobile ? 'web/mobile/index.html' : 'web/index.html'), 'utf8').replace(/__BUILD__/g, build));
+let html = fs.readFileSync(path.join(ROOT, mobile ? 'web/mobile/index.html' : 'web/index.html'), 'utf8').replace(/__BUILD__/g, build);
+if (desktop) {
+  // Windows app: wide-screen layout, plus HLS and MPEG-TS playback in the page
+  fs.copyFileSync(path.join(ROOT, 'node_modules/hls.js/dist/hls.min.js'), path.join(OUT, 'hls.min.js'));
+  fs.copyFileSync(path.join(ROOT, 'node_modules/mpegts.js/dist/mpegts.js'), path.join(OUT, 'mpegts.js'));
+  fs.copyFileSync(path.join(ROOT, 'web/mobile/desktop.css'), path.join(OUT, 'desktop.css'));
+  html = html
+    .replace('</head>', '<link rel="stylesheet" href="desktop.css?v=' + build + '">\n<script>window.__desktop = true;</script>\n<script src="hls.min.js"></script>\n<script src="mpegts.js"></script>\n</head>')
+    .replace('<body>', '<body class="desktop">');
+}
+fs.writeFileSync(path.join(OUT, 'index.html'), html);
 let total = 0;
 for (const f of fs.readdirSync(OUT, { recursive: true })) {
   const p = path.join(OUT, f);
   if (fs.statSync(p).isFile()) total += fs.statSync(p).size;
 }
-console.log(`${mobile ? 'phone' : 'TV'} web build ${build}: app.js ${(fs.statSync(path.join(OUT, 'app.js')).size / 1024).toFixed(0)} KB, app.css ${(fs.statSync(path.join(OUT, 'app.css')).size / 1024).toFixed(0)} KB, total ${(total / 1024).toFixed(0)} KB`);
+console.log(`${desktop ? 'desktop' : mobile ? 'phone' : 'TV'} web build ${build}: app.js ${(fs.statSync(path.join(OUT, 'app.js')).size / 1024).toFixed(0)} KB, app.css ${(fs.statSync(path.join(OUT, 'app.css')).size / 1024).toFixed(0)} KB, total ${(total / 1024).toFixed(0)} KB`);

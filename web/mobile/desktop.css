@@ -1,0 +1,50 @@
+/* Windows app: the phone interface laid out for a wide window, mouse and keyboard. */
+body.desktop { -webkit-user-select: none; }
+body.desktop button:hover { filter: brightness(1.15); }
+body.desktop .chrow:hover, body.desktop .set-row:hover, body.desktop .srow:hover, body.desktop .ep:hover { background: var(--panel); }
+body.desktop .pcard:hover .poster { transform: scale(1.04); box-shadow: 0 0 0 3px var(--signal); }
+body.desktop .vs::-webkit-scrollbar, body.desktop .d-scroll::-webkit-scrollbar, body.desktop .set-scroll::-webkit-scrollbar, body.desktop .results-scroll::-webkit-scrollbar { width: 10px; }
+body.desktop ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 5px; }
+
+@media (min-width: 860px) {
+  /* navigation on the left */
+  #app { flex-direction: row; }
+  .tabbar { order: -1; flex-direction: column; width: 96px; height: auto; padding-top: 18px; border-top: 0; border-right: 1px solid rgba(244, 240, 230, 0.06); }
+  .tab { flex: none; height: 76px; font-size: 12.5px; }
+  .tab .ico { width: 28px; height: 28px; }
+  .hd { padding: 22px 28px 8px; }
+  .hd h1 { font-size: 44px; }
+  .chips { padding: 8px 28px 14px; }
+
+  /* live: big picture on the left, channels on the right */
+  .live { flex-direction: row; }
+  .live .hole { flex: 1; padding-top: 0; height: 100%; }
+  .live .hole-face { font-size: 17px; }
+  .live-body { flex: none; width: 430px; border-left: 1px solid rgba(244, 240, 230, 0.06); }
+  .np { padding-top: 18px; }
+  .np-name { font-size: 28px; }
+
+  /* details: readable width */
+  .d-scroll > * { max-width: 1100px; }
+  .backdrop { padding-top: 34%; }
+  .d-head { margin-top: -110px; padding: 0 32px; }
+  .dposter { width: 150px; padding-top: 225px; }
+  .d-title { font-size: 46px; }
+  .d-btns, .d-plot, .d-credits { padding-left: 32px; padding-right: 32px; margin-left: 0; margin-right: 0; }
+  .d-plot { font-size: 16px; max-width: 860px; }
+  .eps { padding: 0 32px; max-width: 1100px; }
+  .seasons { padding-left: 32px; }
+  .still { width: 192px; height: 108px; }
+  .ep-art { width: 192px; }
+
+  .set-scroll, .form-scroll .form { max-width: 760px; }
+  .set-scroll { padding: 0 28px 28px; }
+  .form { margin: 0 auto; }
+  .welcome { max-width: 760px; margin: 0 auto; }
+
+  /* menus as centred cards */
+  .ov.sheet { left: 50%; right: auto; bottom: auto; top: 50%; width: 480px; max-height: 80%; border-radius: 20px; transform: translate(-50%, -46%); opacity: 0; border: 1px solid var(--line); }
+  .ov-wrap.in .ov.sheet { transform: translate(-50%, -50%); opacity: 1; }
+  .sheet-grab { display: none; }
+  .toast { bottom: 28px; }
+}

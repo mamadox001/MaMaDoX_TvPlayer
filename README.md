@@ -6,7 +6,13 @@ with an XMLTV TV guide. The app does not include any channels.
 
 There are two apps built from the same code: **MaMaDoX TvPlayer** for Android TV boxes
 (remote control, landscape) and **MaMaDoX TvPlayer Phone** for Android phones (touch, portrait
-lists with a full-screen landscape player). They install side by side. Each APK is about 200 KB. Video plays in the TV's hardware decoder (Android MediaPlayer);
+lists with a full-screen landscape player). They install side by side. Each APK is about 200 KB.
+
+There is also **MaMaDoX TvPlayer for Windows** (`desktop/`): the phone interface laid out for a
+wide window, mouse and keyboard, packaged with Electron. It plays HLS and MPEG-TS live streams
+(hls.js, mpegts.js). Unzip `MaMaDoX-TvPlayer-Windows.zip` and run `MaMaDoX TvPlayer.exe`.
+In the player: Space pauses, Left/Right seek or change channel, Esc goes back, F11 toggles full screen.
+Build it with `desktop/build-windows.sh`. Video plays in the TV's hardware decoder (Android MediaPlayer);
 the interface is a web page inside the app, drawn by the TV's GPU.
 
 ## Features

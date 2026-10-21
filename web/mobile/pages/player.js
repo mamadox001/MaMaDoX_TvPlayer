@@ -101,10 +101,26 @@ export class PlayerPage extends Page {
     this.showUi();
     this.tick = setInterval(() => this.update(), 500);
     this.saveTick = 0;
+    // keyboard on computers: Space pauses, arrows seek or change channel
+    this.onKey = (e) => {
+      if (Nav.top() !== this || Nav.overlays.length) return;
+      const k = e.key;
+      if (k === ' ' || k === 'k') this.toggle();
+      else if (k === 'ArrowLeft') this.isLive ? this.zap(-1) : this.skip(-10000);
+      else if (k === 'ArrowRight') this.isLive ? this.zap(1) : this.skip(30000);
+      else if (k === 'ArrowUp' && this.isLive) this.zap(-1);
+      else if (k === 'ArrowDown' && this.isLive) this.zap(1);
+      else return;
+      e.preventDefault();
+      this.showUi();
+    };
+    document.addEventListener('keydown', this.onKey);
+    this.el.onmousemove = () => this.showUi();
   }
 
   leave() {
     clearInterval(this.tick);
+    if (this.onKey) document.removeEventListener('keydown', this.onKey);
     this.saveProgress();
     if (!this.isLive) Video.stop();
     Native.setOrientation('portrait');

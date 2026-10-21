@@ -1,0 +1,14 @@
+{
+  "name": "mamadox-tvplayer",
+  "productName": "MaMaDoX TvPlayer",
+  "version": "1.0.0",
+  "description": "MaMaDoX TvPlayer for Windows: Xtream Codes, M3U and XMLTV",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "sax": "^1.4.1"
+  }
+}

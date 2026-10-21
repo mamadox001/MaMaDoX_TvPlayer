@@ -32,7 +32,7 @@ export class BrowsePage extends Page {
     this.chips = chips((id) => this.pick(id));
     this.vs = new VScroll({
       cls: 'grid',
-      cols: (w) => Math.max(3, Math.floor(w / 128)),
+      cols: (w) => Math.max(3, Math.floor(w / (window.__desktop ? 170 : 128))),
       rowH: (cw) => cw * 1.5 + 44,
       gap: 10,
       pad: 12,

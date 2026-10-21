@@ -102,14 +102,14 @@ class DevPlayer {
         this.start = c.start || 0;
         if (c.rect !== undefined) this.rect(c.rect);
         v.muted = !!c.muted;
-        v.src = c.url;
-        v.loop = !!c.live;
+        this.load(c.url, !!c.live);
         this.state = 'preparing';
         window.__native({ t: 'player', ev: 'state', session: this.session, state: 'preparing' });
         v.play().catch(() => {});
         break;
       case 'stop':
         this.state = 'idle';
+        this.teardown();
         v.removeAttribute('src');
         v.load();
         window.__native({ t: 'player', ev: 'state', session: this.session, state: 'idle' });
@@ -139,6 +139,65 @@ class DevPlayer {
         v.style.objectFit = c.mode === 'fill' || c.mode === 'zoom' ? 'cover' : c.mode === 'stretch' ? 'fill' : 'contain';
         break;
     }
+  }
+  /** Desktop app: HLS through hls.js and MPEG-TS through mpegts.js when they are loaded. */
+  load(url, live) {
+    const v = this.v;
+    this.teardown();
+    const bare = url.split('?')[0].toLowerCase();
+    const hlsUrl = /\.m3u8?$/.test(bare);
+    const tsUrl = /\.ts$/.test(bare) || (live && !hlsUrl && !/\.(mp4|mkv|webm|mov|m4v|mp3|aac)$/.test(bare));
+    const fail = () => {
+      if (this.state === 'idle') return;
+      window.__native({ t: 'player', ev: 'error', session: this.session, what: 1, extra: -1004, message: 'stream error' });
+      this.state = 'error';
+      window.__native({ t: 'player', ev: 'state', session: this.session, state: 'error' });
+    };
+    const H = window.Hls;
+    const M = window.mpegts;
+    if (hlsUrl && H && H.isSupported()) {
+      const hls = (this.hls = new H({ lowLatencyMode: false, backBufferLength: 30 }));
+      hls.on(H.Events.ERROR, (e, d) => {
+        if (!d.fatal) return;
+        if (d.type === H.ErrorTypes.MEDIA_ERROR && !this.recovered) {
+          this.recovered = true;
+          hls.recoverMediaError();
+        } else fail();
+      });
+      this.recovered = false;
+      hls.loadSource(url);
+      hls.attachMedia(v);
+    } else if (tsUrl && M && M.isSupported()) {
+      const p = (this.ts = M.createPlayer({ type: 'mpegts', isLive: live, url }, { enableStashBuffer: true, liveBufferLatencyChasing: false, statisticsInfoReportInterval: 2000000000 }));
+      p.on(M.Events.ERROR, fail);
+      p.attachMediaElement(v);
+      p.load();
+    } else {
+      v.src = url;
+      v.loop = live && /\.webm$/.test(bare);
+    }
+  }
+  teardown() {
+    if (this.hls) this.hls.destroy();
+    if (this.ts) {
+      const p = this.ts;
+      try {
+        p.pause();
+        p.unload();
+        p.detachMediaElement();
+      } catch (e) {
+        /* already stopped */
+      }
+      // mpegts.js still finishes pending network callbacks: destroy it once they are done
+      setTimeout(() => {
+        try {
+          p.destroy();
+        } catch (e) {
+          /* already gone */
+        }
+      }, 4000);
+    }
+    this.hls = this.ts = null;
   }
   rect(r) {
     const s = this.v.style;
@@ -180,7 +239,7 @@ export const Native = {
   cancelJob: (id) => call('cancelJob', id),
   player: (cmd) => (A ? call('player', JSON.stringify(cmd)) : devPlayer.cmd(cmd)),
   playerStatus: () => (A ? parse(call('playerStatus'), { state: 'idle' }) : devPlayer.status()),
-  playerTracks: () => (A ? parse(call('playerTracks'), []) : [{ index: 1, kind: 'audio', lang: 'en', selected: true }, { index: 2, kind: 'audio', lang: 'fr', selected: false }]),
+  playerTracks: () => (A ? parse(call('playerTracks'), []) : window.__desktop ? [] : [{ index: 1, kind: 'audio', lang: 'en', selected: true }, { index: 2, kind: 'audio', lang: 'fr', selected: false }]),
   openExternal: (o) => !!call('openExternal', JSON.stringify(o)),
   openUrl: (u) => !!call('openUrl', u),
   voiceSearch: () => !!call('voiceSearch'),
@@ -229,7 +288,15 @@ export async function netFetch(url, opts = {}) {
     throw new NetError('No connection to the app service.');
   }
   const err = res.headers.get('X-Net-Error');
-  if (err) throw new NetError(err, 0);
+  if (err) {
+    let msg = err;
+    try {
+      msg = decodeURIComponent(err);
+    } catch (e) {
+      /* plain text */
+    }
+    throw new NetError(msg, 0);
+  }
   if (!res.ok) throw new NetError(`The server answered ${res.status}.`, res.status);
   return res;
 }

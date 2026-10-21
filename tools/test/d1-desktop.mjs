@@ -1,0 +1,54 @@
+// Windows app walk-through in a 1280x800 window (helper: node desktop/run-local.js with PORT=8095).
+import { launch, shot, sleep, waitFor, report } from './tv.mjs';
+
+const { browser, page, errors } = await launch({ url: 'http://127.0.0.1:8095/', viewport: { width: 1280, height: 800, deviceScaleFactor: 1 } });
+const click = async (sel, i = 0) => {
+  await page.waitForSelector(sel, { visible: true, timeout: 15000 });
+  const els = await page.$$(sel);
+  await els[i].click();
+  await sleep(500);
+};
+await waitFor(page, () => document.querySelector('.setup .field'), 15000);
+await page.type('input[name=name]', 'Demo TV');
+await page.type('input[name=server]', '127.0.0.1:8091');
+await page.type('input[name=user]', 'demo');
+await page.type('input[name=pass]', 'demo123');
+await click('.setup .btn.primary');
+await waitFor(page, () => document.querySelector('.live .chrow .ch-name') && document.querySelector('.live .chrow .ch-name').textContent, 90000);
+await sleep(2000);
+await click('.live .chrow', 1);
+await sleep(3000);
+await shot(page, 'd-live');
+await click('.live .hole');
+await sleep(2500);
+await shot(page, 'd-player');
+await page.keyboard.press('ArrowRight');
+await sleep(1500);
+await page.keyboard.press('Escape');
+await sleep(800);
+await click('.tab', 1);
+await waitFor(page, () => [].some.call(document.querySelectorAll('.browse.on .pc-title'), (e) => e.textContent), 20000);
+await sleep(2000);
+await shot(page, 'd-movies');
+await click('.browse.on .vs-cell:not([style*="display: none"])', 3);
+await sleep(1500);
+await shot(page, 'd-movie');
+await page.keyboard.press('Escape');
+await sleep(500);
+// add an M3U playlist with a guide
+await click('.tab', 4);
+await click('.set-row', 1);
+await click('.setup .seg button', 1);
+await page.type('.setup input[name=name]', 'Plain M3U');
+await page.type('.setup input[name=url]', 'http://127.0.0.1:8091/plain.m3u');
+await click('.setup .btn.primary');
+await waitFor(page, () => document.querySelector('.live.on .chrow .ch-name'), 60000);
+await sleep(6000);
+await click('.live .chrow', 2);
+await sleep(2500);
+await shot(page, 'd-m3u-live');
+await page.setViewport({ width: 420, height: 820 });
+await sleep(800);
+await shot(page, 'd-narrow');
+report(errors);
+await browser.close();
