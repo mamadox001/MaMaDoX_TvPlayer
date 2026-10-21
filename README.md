@@ -1,10 +1,12 @@
-# IPTV Player for Android TV
+# MaMaDoX TvPlayer for Android TV and phones
 
 A lightweight IPTV player for Android TV and Android TV boxes (Android 5.0 and newer).
 It plays your own IPTV subscription from an **Xtream Codes** login or an **M3U link**,
 with an XMLTV TV guide. The app does not include any channels.
 
-The APK is about 210 KB. Video plays in the TV's hardware decoder (Android MediaPlayer);
+There are two apps built from the same code: **MaMaDoX TvPlayer** for Android TV boxes
+(remote control, landscape) and **MaMaDoX TvPlayer Phone** for Android phones (touch, portrait
+lists with a full-screen landscape player). They install side by side. Each APK is about 200 KB. Video plays in the TV's hardware decoder (Android MediaPlayer);
 the interface is a web page inside the app, drawn by the TV's GPU.
 
 ## Features
@@ -32,9 +34,9 @@ the interface is a web page inside the app, drawn by the TV's GPU.
 
 1. On the TV: **Settings → Device Preferences → Security & restrictions → Unknown sources**,
    and allow the app you will install with (a file manager, or *Downloader*).
-2. Copy `IPTV-Player-1.0.0.apk` to a USB stick, plug it into the TV and open it with a file
+2. Copy `MaMaDoX-TvPlayer-1.0.0.apk` to a USB stick, plug it into the TV and open it with a file
    manager — or send it with an app such as *Send Files to TV*.
-3. Open **IPTV Player** from the apps row, then add your playlist.
+3. Open **MaMaDoX TvPlayer** from the apps row, then add your playlist.
 
 To update later, install a newer APK over the old one: your playlists and settings stay.
 
@@ -63,7 +65,7 @@ On Debian/Ubuntu:
 ```sh
 sudo apt install nodejs npm default-jdk-headless aapt dalvik-exchange zipalign apksigner android-sdk-platform-23
 npm install
-./build.sh            # writes build/IPTV-Player-<version>.apk
+./build.sh            # writes build/MaMaDoX-TvPlayer-<version>.apk and build/MaMaDoX-TvPlayer-Phone-<version>.apk
 ```
 
 Raise `android:versionCode` and `android:versionName` in `android/AndroidManifest.xml`
@@ -83,8 +85,10 @@ android/
   src/com/iptvplayer/tv/           Activity, WebView host, video player, local server, bridge
   core/com/iptvplayer/core/        streaming parsers: Xtream API, M3U, XMLTV, JSON, HTTP
   stubs/                           compile-only stubs for newer Android classes
+  mobile/                          phone app manifest and theme (same Java code, MOBILE flag)
 web/
-  src/                             interface: screens, lists, player UI, data layer, styles
+  src/                             TV interface: screens, lists, player UI, data layer, styles
+  mobile/                          phone interface (reuses the data layer and player from src/)
   build.mjs                        bundles the interface into android/assets/www
 tools/
   mock/                            fake IPTV provider (Xtream API, M3U, XMLTV, test streams)

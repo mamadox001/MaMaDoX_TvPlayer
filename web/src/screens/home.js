@@ -38,7 +38,7 @@ export class HomeScreen extends Screen {
     this.plName = h('div.brand-pl');
     this.chip = h('div.acct-chip');
     this.el.append(
-      h('header.home-head', null, h('div.brand', null, h('div.brand-mark', { html: MARK }), h('div.brand-name', { text: 'IPTV Player' }), this.plName, this.chip), clock(true))
+      h('header.home-head', null, h('div.brand', null, h('div.brand-mark', { html: MARK }), h('div.brand-name', { text: 'MaMaDoX TvPlayer' }), this.plName, this.chip), clock(true))
     );
     // hero
     this.hole = h('div.hole.home-hole', null, h('div.hole-face', null, icon('tv'), h('div.hole-msg', { text: 'Pick a channel in Live TV and it plays here.' })), h('div.hole-spin', null, h('div.spin')));

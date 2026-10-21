@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Phone version: normal window with a status bar; full screen only in the player. -->
+    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@drawable/launch</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:colorPrimaryDark">@color/studio</item>
+        <item name="android:statusBarColor">@color/studio</item>
+        <item name="android:navigationBarColor">@color/studio</item>
+    </style>
+</resources>

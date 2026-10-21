@@ -106,6 +106,16 @@ final class Bridge {
         });
     }
 
+    /** Phones: 'portrait', 'landscape' (full-screen player) or 'auto'. */
+    @JavascriptInterface
+    public void setOrientation(final String mode) {
+        act.ui.post(new Runnable() {
+            public void run() {
+                act.setPhoneMode(mode);
+            }
+        });
+    }
+
     @JavascriptInterface
     public void log(String s) {
         Log.d(MainActivity.TAG, "page: " + s);

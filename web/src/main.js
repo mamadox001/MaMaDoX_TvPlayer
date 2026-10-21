@@ -191,7 +191,7 @@ function fatal(e) {
   console.error('start failed: ' + ((e && e.stack) || e));
   const box = document.createElement('div');
   box.className = 'fatal';
-  box.innerHTML = '<div class="fatal-title">IPTV Player could not start</div><div class="fatal-msg">Press OK to try again, or Back to close. If this keeps happening, update Android System WebView from the Play Store.</div>';
+  box.innerHTML = '<div class="fatal-title">MaMaDoX TvPlayer could not start</div><div class="fatal-msg">Press OK to try again, or Back to close. If this keeps happening, update Android System WebView from the Play Store.</div>';
   document.body.appendChild(box);
   window.__key = (name, type) => {
     if (type !== 'up') return;

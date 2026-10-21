@@ -32,7 +32,7 @@ for (const [d, s] of [['mdpi', 48], ['hdpi', 72], ['xhdpi', 96], ['xxhdpi', 144]
 // Android TV banner 320x180dp -> xhdpi 640x360
 const banner = `<div style="width:640px;height:360px;background:#0E1B2C;display:flex;align-items:center;padding-left:58px;box-sizing:border-box;position:relative;overflow:hidden">
   <div style="width:150px;height:176px">${MARK.replace('<svg ', '<svg width="100%" height="100%" ')}</div>
-  <div style="margin-left:26px;font-family:Teko;font-weight:600;color:#F4F0E6;line-height:.82;font-size:112px;letter-spacing:1px">IPTV<br>Player</div>
+  <div style="margin-left:26px;font-family:Teko;font-weight:600;color:#F4F0E6;line-height:.82;font-size:96px;letter-spacing:1px">MaMaDoX<br>TvPlayer</div>
   <div style="position:absolute;left:0;right:0;bottom:0;height:10px;display:flex">${COLORS.map((c) => `<i style="flex:1;background:${c}"></i>`).join('')}</div></div>`;
 await shot(banner, 640, 360, path.join(RES, 'drawable-xhdpi/banner.png'));
 // mark used on the native launch screen (behind the web splash)

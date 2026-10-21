@@ -184,6 +184,8 @@ export const Native = {
   openExternal: (o) => !!call('openExternal', JSON.stringify(o)),
   openUrl: (u) => !!call('openUrl', u),
   voiceSearch: () => !!call('voiceSearch'),
+  /** Phone only: 'portrait', 'landscape' or 'auto'. */
+  setOrientation: (m) => call('setOrientation', m),
   phoneSetup: (start) => call('phoneSetup', !!start) || '',
 };
 

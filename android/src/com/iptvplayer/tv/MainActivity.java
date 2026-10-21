@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle state) {
         super.onCreate(state);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (!BuildInfo.MOBILE) getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         root = new FrameLayout(this);
         root.setBackgroundResource(R.drawable.launch);
         server = new AppServer(this);
@@ -67,7 +67,7 @@ public class MainActivity extends Activity {
             web = new WebView(this);
         } catch (Throwable t) {
             Log.e(TAG, "WebView unavailable", t);
-            showNotice("Android System WebView is missing or being updated.\n\nUpdate \"Android System WebView\" from the Play Store, then open IPTV Player again.");
+            showNotice("Android System WebView is missing or being updated.\n\nUpdate \"Android System WebView\" from the Play Store, then open MaMaDoX TvPlayer again.");
             return false;
         }
         WebSettings s = web.getSettings();
@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
     private final Runnable readyWatchdog = new Runnable() {
         public void run() {
             if (!pageReady && web != null) {
-                showNotice("IPTV Player could not start its interface.\n\nUpdate \"Android System WebView\" from the Play Store, then open IPTV Player again.\n\nPress Back to close.");
+                showNotice("MaMaDoX TvPlayer could not start its interface.\n\nUpdate \"Android System WebView\" from the Play Store, then open MaMaDoX TvPlayer again.\n\nPress Back to close.");
             }
         }
     };
@@ -217,6 +217,8 @@ public class MainActivity extends Activity {
             }
             return super.dispatchKeyEvent(e);
         }
+        // phones: the page only needs Back; typing and everything else go to the WebView
+        if (BuildInfo.MOBILE && code != KeyEvent.KEYCODE_BACK) return super.dispatchKeyEvent(e);
         if (keyPassthrough && code != KeyEvent.KEYCODE_BACK && code != KeyEvent.KEYCODE_ESCAPE) {
             return super.dispatchKeyEvent(e);
         }
@@ -407,9 +409,27 @@ public class MainActivity extends Activity {
         } catch (Exception ignored) { }
     }
 
+    /** Phones: system bars only hide while the full-screen player is open. */
+    private boolean phoneFull = false;
+
+    void setPhoneMode(final String mode) {
+        if (!BuildInfo.MOBILE) return;
+        phoneFull = "landscape".equals(mode);
+        setRequestedOrientation(phoneFull ? android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                : "auto".equals(mode) ? android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                : android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        immersive();
+    }
+
     @SuppressWarnings("deprecation")
     private void immersive() {
         View d = getWindow().getDecorView();
+        if (BuildInfo.MOBILE && !phoneFull) {
+            d.setSystemUiVisibility(0);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            return;
+        }
+        if (BuildInfo.MOBILE) getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         d.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);

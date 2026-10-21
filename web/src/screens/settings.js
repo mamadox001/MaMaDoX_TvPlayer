@@ -173,7 +173,7 @@ export class SettingsScreen extends Screen {
       { label: 'Open channels in full screen', sub: 'Off: the first OK plays in the preview window, the second goes full screen.', value: onOff(s.openLiveFullscreen), icon: 'tv', action: () => this.set('openLiveFullscreen', !s.openLiveFullscreen) },
       { label: 'Preview on Home', sub: 'Plays your last channel without sound at the top of Home.', value: onOff(s.homePreview), icon: 'play', action: () => this.set('homePreview', !s.homePreview) },
       { label: 'Show what is on in channel lists', sub: 'Loads the current programme for the channels on screen.', value: onOff(s.showNowInList), icon: 'guide', action: () => this.set('showNowInList', !s.showNowInList) },
-      { label: 'When the app opens', sub: 'Where IPTV Player starts.', value: start[s.startOn], icon: 'history', action: () => this.choose('When the app opens', 'startOn', [{ value: 'home', label: 'Home' }, { value: 'live', label: 'Live TV' }, { value: 'last', label: 'Last channel, full screen' }]) },
+      { label: 'When the app opens', sub: 'Where MaMaDoX TvPlayer starts.', value: start[s.startOn], icon: 'history', action: () => this.choose('When the app opens', 'startOn', [{ value: 'home', label: 'Home' }, { value: 'live', label: 'Live TV' }, { value: 'last', label: 'Last channel, full screen' }]) },
       { label: 'Hide empty categories', value: onOff(s.hideEmptyCats), icon: 'eyeOff', action: () => this.set('hideEmptyCats', !s.hideEmptyCats) },
     ];
   }
@@ -263,7 +263,7 @@ export class SettingsScreen extends Screen {
   rows_about() {
     const i = Native.info() || {};
     return [
-      { label: 'IPTV Player', sub: 'Plays the streams of your own IPTV subscription. This app does not provide any channels.', value: `Version ${i.version || '1.0'}`, icon: 'info', action: () => false },
+      { label: 'MaMaDoX TvPlayer', sub: 'Plays the streams of your own IPTV subscription. This app does not provide any channels.', value: `Version ${i.version || '1.0'}`, icon: 'info', action: () => false },
       { label: 'Device', sub: [i.maker, i.model].filter(Boolean).join(' ') || 'Unknown', value: i.release ? `Android ${i.release}` : '', icon: 'tv', action: () => false },
       { label: 'Screen', value: i.width ? `${i.width} x ${i.height}` : '', sub: i.totalMem ? `${(i.totalMem / 1073741824).toFixed(1)} GB memory, ${i.cores || '?'} cores` : '', icon: 'aspect', action: () => false },
       { label: 'Web engine', sub: i.webview || navigator.userAgent.replace(/^.*(Chrome\/[\d.]+).*$/, '$1'), icon: 'settings', action: () => false },

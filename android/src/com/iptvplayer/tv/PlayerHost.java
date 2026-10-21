@@ -93,6 +93,14 @@ final class PlayerHost implements SurfaceHolder.Callback, MediaPlayer.OnPrepared
         surface.setVisibility(View.GONE);
         frame.setFocusable(false);
         root.addView(frame, new FrameLayout.LayoutParams(-1, -1, Gravity.TOP | Gravity.LEFT));
+        // phones rotate: size the picture again whenever the video area changes size
+        frame.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            public void onLayoutChange(View v, int l, int t, int r, int b, int ol, int ot, int or, int ob) {
+                if (r - l != or - ol || b - t != ob - ot) {
+                    act.ui.post(new Runnable() { public void run() { layoutVideo(); } });
+                }
+            }
+        });
     }
 
     void setFrameBackground(boolean black) {

@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 
 const DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(DIR, '../..');
-const WWW = path.join(ROOT, 'android/assets/www');
+const WWW = process.env.WWW ? path.resolve(process.env.WWW) : path.join(ROOT, 'android/assets/www');
 const PORT = +(process.env.PORT || 8090);
 const DATA = process.env.DATA || path.join(DIR, 'data');
 fs.mkdirSync(DATA, { recursive: true });

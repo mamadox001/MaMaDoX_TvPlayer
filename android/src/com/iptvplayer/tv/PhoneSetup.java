@@ -160,10 +160,10 @@ final class PhoneSetup implements Runnable {
         String bars = "<div class=bars><i style=background:#F4F0E6></i><i style=background:#FFC83A></i><i style=background:#48D6E0></i>"
                 + "<i style=background:#5BD98C></i><i style=background:#D36BD9></i><i style=background:#FF5148></i><i style=background:#3B6FE0></i></div>";
         if (sent) {
-            return "<!doctype html><meta name=viewport content='width=device-width,initial-scale=1'><title>IPTV Player</title><style>" + css + "</style>"
+            return "<!doctype html><meta name=viewport content='width=device-width,initial-scale=1'><title>MaMaDoX TvPlayer</title><style>" + css + "</style>"
                     + bars + "<h1>Sent to your TV</h1><p class=ok>Check the TV screen to confirm the playlist.</p>";
         }
-        return "<!doctype html><meta name=viewport content='width=device-width,initial-scale=1'><title>IPTV Player</title><style>" + css + "</style>"
+        return "<!doctype html><meta name=viewport content='width=device-width,initial-scale=1'><title>MaMaDoX TvPlayer</title><style>" + css + "</style>"
                 + bars + "<h1>Add a playlist to your TV</h1><p>Fill this in on your phone. The TV will ask you to confirm.</p>"
                 + "<form method=post action=/add>"
                 + "<div class=seg><label class=on id=lx><input type=radio name=type value=xtream checked onchange=sw()>Xtream Codes</label>"
